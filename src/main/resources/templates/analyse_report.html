@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title>Analyse</title>
+
+<!-- jquery -->
+<script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+
+<!-- jquery-ui -->
+<link href="//cdn.bootcss.com/jqueryui/1.12.1/jquery-ui.css"
+	rel="stylesheet" />
+<script src="//cdn.bootcss.com/jqueryui/1.12.1/jquery-ui.js"></script>
+
+<!-- bootstrap -->
+<link
+	href="//cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+	rel="stylesheet" />
+<link href="//cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css"
+	rel="stylesheet" />
+<script src="//cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+<!-- jstree -->
+<link href="//cdn.bootcss.com/jstree/3.3.2/themes/default/style.min.css"
+	rel="stylesheet" />
+<script src="//cdn.bootcss.com/jstree/3.3.2/jstree.min.js"></script>
+
+<!-- highcharts -->
+<link href="//cdn.bootcss.com/highcharts/5.0.0/css/highcharts.css"
+	rel="stylesheet" />
+<script src="//cdn.bootcss.com/highcharts/5.0.0/highcharts.js"></script>
+
+<!-- highlight -->
+<link href="//cdn.bootcss.com/highlight.js/9.7.0/styles/idea.min.css"
+	rel="stylesheet" />
+<script src="//cdn.bootcss.com/highlight.js/9.7.0/highlight.min.js"></script>
+<script src="//cdn.bootcss.com/highlight.js/9.7.0/languages/java.min.js"></script>
+
+<!-- jQuery-ui-Slider-Pips -->
+<link
+	href="//cdn.bootcss.com/jQuery-ui-Slider-Pips/1.11.4/jquery-ui-slider-pips.min.css"
+	rel="stylesheet" />
+<script th:src="@{/js/jquery-ui-slider-pips.min.js}"></script>
+
+
+<link th:href="@{/css/analyse_report.css}" rel="stylesheet" />
+<script th:src="@{/js/analyse_report.js}"></script>
+
+</head>
+<body>
+	<h1>
+		Git Url:<span id="git_url" th:utext="${gitUrl}"></span>
+	</h1>
+	<hr></hr>
+	<ul id="myTab" class="nav nav-tabs">
+		<li class="active"><a href="#overviewTab" data-toggle="tab">
+				总览</a></li>
+		<li><a href="#testTab" data-toggle="tab">测试用例</a></li>
+		<li><a href="#codeTab" data-toggle="tab">代码</a></li>
+
+	</ul>
+	<div id="myTabContent" class="tab-content">
+		<div class="tab-pane fade in active" id="overviewTab">
+			<div id="chart"></div>
+		</div>
+		<div class="tab-pane fade" id="testTab">
+			<table style="word-break: break-all; word-wrap: break-all;"
+				class="table table-bordered">
+				<tr>
+					<th>test case</th>
+					<th style="min-width: 100px; max-width: 200px;"
+						th:each="unitTestName : ${unitTestNames}"
+						th:utext="${unitTestName}"></th>
+				</tr>
+				<tr th:each="unitTestResult : ${unitTestResults}">
+					<td
+						th:utext="${unitTestResult[commitDate]}+' '+${unitTestResult[commitTime]}"></td>
+					<td th:each="testcaseResult : ${unitTestResult[testResults]}"
+						th:utext="${testcaseResult}"></td>
+					<td th:if="not ${unitTestResult[testResults]} "
+						th:colspan="${unitTestNames.size()}"></td>
+				</tr>
+			</table>
+		</div>
+
+		<div class="tab-pane fade" id="codeTab">
+
+			<div id="tree" style="height: 650px;"></div>
+			<div id="data">
+
+				<div class="content commitSlider" style="display: none;">
+					<div class="slider"></div>
+				</div>
+				<div class="content code"
+					style="display: none; height: 580px; overflow: auto;">
+					<pre>
+						<code id="code"></code>
+					</pre>
+				</div>
+
+				<div class="content folder" style="display: none;"></div>
+				<div class="content image"
+					style="display: none; position: relative;">
+					<img src="" alt=""
+						style="display: block; position: absolute; left: 50%; top: 50%; padding: 0; max-height: 90%; max-width: 90%;" />
+				</div>
+				<div class="content default" style="text-align: center;">select
+					a file......</div>
+			</div>
+		</div>
+
+	</div>
+</body>
+</html>
