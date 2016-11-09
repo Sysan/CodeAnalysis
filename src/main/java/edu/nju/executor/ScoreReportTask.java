@@ -56,19 +56,17 @@ public class ScoreReportTask implements Runnable {
 
 		Task task = taskRepository.findByGitUrl(gitUrl);
 		if (task == null) {
-			LOGGER.info("Nothing to analyse......");
+			LOGGER.info("Nothing to analyse...");
 			return;
 		} else if (task.isScoreReportDone()) {
-			LOGGER.info("The git url has been analysed as score calc task");
+			LOGGER.info("The git url has been analysed as score report task.");
 			return;
 		}
-
-		LOGGER.info("a new calc task created");
 
 		String localUrl = task.getLocalUrl();
 		JGitHelper gitHelper = new JGitHelper(gitUrl, localUrl);
 
-		LOGGER.info("git project downloaded");
+		LOGGER.info("Git project has been downloaded.");
 
 		GitCommitInfo lastestCommitInfo = gitHelper.getLastestCommitInfo();
 
@@ -114,7 +112,7 @@ public class ScoreReportTask implements Runnable {
 
 		project.getTestcases().addAll(testcases);
 
-		LOGGER.info("maven task finished......");
+		LOGGER.info("Maven task finished...");
 
 		task.setScore(score);
 
@@ -123,6 +121,8 @@ public class ScoreReportTask implements Runnable {
 		task.setScoreReportDone(true);
 
 		taskRepository.save(task);
+		
+		LOGGER.info("Score Report Task Finished.");
 
 	}
 

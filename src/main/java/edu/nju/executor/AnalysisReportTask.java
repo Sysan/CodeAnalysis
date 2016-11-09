@@ -60,13 +60,13 @@ public class AnalysisReportTask implements Runnable {
 
 		Task task = taskRepository.findByGitUrl(gitUrl);
 		if (task == null) {
-			LOGGER.info("Nothing to analyse......");
+			LOGGER.info("Nothing to analyse...");
 			return;
 		} else if (task.isAnalysisReportDone()) {
-			LOGGER.info("The git url has been analysed as analyse task");
+			LOGGER.info("The git url has been analysed as analysis report task.");
 			return;
 		} else if (!task.isScoreReportDone()) {
-			LOGGER.error("analyse task must be after scorecalc task");
+			LOGGER.error("Analysis report task must be after score report task.");
 			return;
 		}
 
@@ -129,6 +129,7 @@ public class AnalysisReportTask implements Runnable {
 
 		taskRepository.save(task);
 
+		LOGGER.info("Analysis Report Task Finished.");
 	}
 
 }

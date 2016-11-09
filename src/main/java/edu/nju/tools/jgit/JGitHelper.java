@@ -35,7 +35,7 @@ public class JGitHelper {
 	private Git git;
 
 	/**
-	 * 按时间逆序
+	 * 提交信息（按时间逆序）
 	 */
 	@Getter
 	private List<GitCommitInfo> commitInfos = new ArrayList<>();
@@ -68,6 +68,9 @@ public class JGitHelper {
 		init();
 	}
 
+	/**
+	 * 初始化，获取Git提交信息
+	 */
 	private void init() {
 		if (git == null)
 			return;
@@ -90,6 +93,10 @@ public class JGitHelper {
 		commitInfos.sort((commit1, commit2) -> commit2.getCommitDate().compareTo(commit1.getCommitDate()));
 	}
 
+	/**
+	 * 检出某个版本
+	 * @param commitId
+	 */
 	public void checkout(String commitId) {
 		String revStr = (commitId == null) ? getLastestCommitId() : commitId;
 		try {
@@ -99,12 +106,20 @@ public class JGitHelper {
 		}
 	}
 
+	/**
+	 * 获得最后一次提交信息
+	 * @return
+	 */
 	public GitCommitInfo getLastestCommitInfo() {
 		if (commitInfos.isEmpty())
 			return null;
 		return commitInfos.get(0);
 	}
 
+	/**
+	 * 获得最后一次提交的id
+	 * @return
+	 */
 	public String getLastestCommitId() {
 		GitCommitInfo lastestCommitInfo = getLastestCommitInfo();
 		if (lastestCommitInfo == null)
@@ -112,6 +127,10 @@ public class JGitHelper {
 		return lastestCommitInfo.getCommitId();
 	}
 
+	/**
+	 * 获得当前版本的id
+	 * @return
+	 */
 	public String getCurrentCommitId() {
 		try {
 			Iterator<RevCommit> iterator = git.log().call().iterator();
@@ -126,7 +145,14 @@ public class JGitHelper {
 		return null;
 	}
 
-	public Map<String, String> getChildrenWithDir(final String commitId, final String dirPath) throws Exception {
+	/**
+	 * 获得在指定版本中，某个目录下的文件
+	 * @param commitId
+	 * @param dirPath
+	 * @return
+	 * @throws Exception
+	 */
+	public Map<String, String> getChildren(final String commitId, final String dirPath) throws Exception {
 
 		String revStr = (commitId == null) ? getLastestCommitId() : commitId;
 
@@ -180,7 +206,14 @@ public class JGitHelper {
 		return children;
 	}
 
-	public String getContentWithFile(final String commitId, final String filePath) throws Exception {
+	/**
+	 * 获得在指定版本中，某个文件的内容
+	 * @param commitId
+	 * @param filePath
+	 * @return
+	 * @throws Exception
+	 */
+	public String getContent(final String commitId, final String filePath) throws Exception {
 
 		String revStr = (commitId == null) ? getLastestCommitId() : commitId;
 
@@ -208,7 +241,13 @@ public class JGitHelper {
 		return null;
 	}
 
-	public FileWithBlame blameContentWithFile(final String filePath) throws Exception {
+	/**
+	 * 获得文件内容（带有每行的提交信息）
+	 * @param filePath
+	 * @return
+	 * @throws Exception
+	 */
+	public FileWithBlame blameContent(final String filePath) throws Exception {
 		FileWithBlame fileWithBlame = new FileWithBlame();
 		fileWithBlame.setRelativePath(filePath);
 		BlameResult blameResult = null;

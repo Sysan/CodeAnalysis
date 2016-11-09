@@ -21,7 +21,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * 对外接口，包括分析考试、获取考试分数、获取分析报告。
+ * 对外接口，包括分析考试、获取考试分数、获取分析报告
  * 
  * @author SuZiquan
  *

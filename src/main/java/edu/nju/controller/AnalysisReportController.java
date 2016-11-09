@@ -196,7 +196,7 @@ public class AnalysisReportController {
 		String content = null;
 		boolean exists = true;
 		try {
-			content = gitHelper.getContentWithFile(commitId, fileNodeId);
+			content = gitHelper.getContent(commitId, fileNodeId);
 			//将Java代码中的Html特殊字符进行转义处理，防止在页面上显示出错
 			content = StringEscapeUtils.escapeHtml(content);
 		} catch (Exception e) {
