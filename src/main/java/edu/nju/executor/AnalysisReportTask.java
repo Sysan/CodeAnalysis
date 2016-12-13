@@ -11,10 +11,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
+import edu.nju.config.ServerConfig;
 import edu.nju.entity.Metric;
 import edu.nju.entity.Project;
 import edu.nju.entity.Task;
 import edu.nju.entity.Testcase;
+import edu.nju.mq.AnalysisReportSender;
 import edu.nju.repository.ProjectRepository;
 import edu.nju.repository.TaskRepository;
 import edu.nju.tools.jdt.JDTAnalyzer;
@@ -52,6 +55,12 @@ public class AnalysisReportTask implements Runnable {
 	@Autowired
 	private ProjectRepository projectRepository;
 
+	@Autowired
+	private ServerConfig serverConfig;
+	
+	@Autowired
+	private AnalysisReportSender analysisReportSender;
+	
 	@Override
 	@Transactional
 	public void run() {
@@ -128,6 +137,11 @@ public class AnalysisReportTask implements Runnable {
 		task.setAnalysisReportDone(true);
 
 		taskRepository.save(task);
+		
+		//发送消息
+		String analysisReportUrl = serverConfig.getAddress() + ":" + serverConfig.getPort() + "/analysisReport"
+		+ "?gitUrl=" + gitUrl;
+		analysisReportSender.send(gitUrl, analysisReportUrl);
 
 		LOGGER.info("Analysis Report Task Finished.");
 	}

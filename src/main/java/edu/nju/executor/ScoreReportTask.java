@@ -10,11 +10,14 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import edu.nju.config.ServerConfig;
 import edu.nju.entity.Metric;
 import edu.nju.entity.Project;
 import edu.nju.entity.Score;
 import edu.nju.entity.Task;
 import edu.nju.entity.Testcase;
+import edu.nju.mq.ScoreReportSender;
+import edu.nju.mq.ScoreSender;
 import edu.nju.repository.TaskRepository;
 import edu.nju.tools.jdt.JDTAnalyzer;
 import edu.nju.tools.jgit.GitCommitInfo;
@@ -47,6 +50,15 @@ public class ScoreReportTask implements Runnable {
 
 	@Autowired
 	private TaskRepository taskRepository;
+	
+	@Autowired
+	private ScoreSender scoreSender;
+	
+	@Autowired
+	private ScoreReportSender scoreReportSender;
+	
+	@Autowired
+	private ServerConfig serverConfig;
 
 	@Override
 	@Transactional
@@ -121,6 +133,13 @@ public class ScoreReportTask implements Runnable {
 		task.setScoreReportDone(true);
 
 		taskRepository.save(task);
+		
+		//发送消息
+		scoreSender.send(gitUrl, score.getScore());
+		
+		String scoreReportUrl = serverConfig.getAddress() + ":" + serverConfig.getPort() + "/scoreReport"
+		+ "?gitUrl=" + gitUrl;
+		scoreReportSender.send(gitUrl, scoreReportUrl);
 		
 		LOGGER.info("Score Report Task Finished.");
 

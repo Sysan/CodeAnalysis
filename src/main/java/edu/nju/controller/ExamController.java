@@ -91,7 +91,6 @@ public class ExamController {
 			if (scoreReportDone) {
 				String scoreReportUrl = serverConfig.getAddress() + ":" + serverConfig.getPort() + "/scoreReport"
 						+ "?gitUrl=" + gitUrl;
-				;
 				getReportResponse.setScoreReportUrl(scoreReportUrl);
 				getReportResponse.setScoreReportState("finish");
 			} else {
