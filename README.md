@@ -26,7 +26,7 @@
 
 ## 通信接口：
 ### RabbitMQ版（[接口文档](http://115.29.184.56:10000/html/TssInterface/%E5%88%86%E6%9E%90%E7%B3%BB%E7%BB%9F%E6%8E%A5%E5%8F%A3.html)）：
-使用消息中间件Rabbit进行通信。  
+使用RabbitMQ进行通信。  
 
 **RabbitMQ控制台地址**：
 http://115.29.184.56:15672/  
